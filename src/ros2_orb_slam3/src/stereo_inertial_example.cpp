@@ -16,7 +16,7 @@ StereoInertialMode::StereoInertialMode() : Node("stereo_inertial_node_cpp")
     
     // Set default paths
     vocFilePath = homeDir + "/" + packagePath + "orb_slam3/Vocabulary/ORBvoc.txt.bin";
-    settingsFilePath = homeDir + "/" + packagePath + "orb_slam3/config/Stereo-Inertial/TUM-VI.yaml";
+    settingsFilePath = homeDir + "/" + packagePath + "orb_slam3/config/Stereo-Inertial/EuRoC.yaml";
     
     RCLCPP_INFO(this->get_logger(), "Vocabulary file: %s", vocFilePath.c_str());
     RCLCPP_INFO(this->get_logger(), "Settings file: %s", settingsFilePath.c_str());

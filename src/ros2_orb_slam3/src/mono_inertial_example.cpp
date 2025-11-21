@@ -16,7 +16,7 @@ MonocularInertialMode::MonocularInertialMode() : Node("mono_inertial_node_cpp")
     
     // Set default paths
     vocFilePath = homeDir + "/" + packagePath + "orb_slam3/Vocabulary/ORBvoc.txt.bin";
-    settingsFilePath = homeDir + "/" + packagePath + "orb_slam3/config/Monocular-Inertial/TUM-VI.yaml";
+    settingsFilePath = homeDir + "/" + packagePath + "orb_slam3/config/Monocular-Inertial/EuRoC_stereo_inertial.yaml";
     
     RCLCPP_INFO(this->get_logger(), "Vocabulary file: %s", vocFilePath.c_str());
     RCLCPP_INFO(this->get_logger(), "Settings file: %s", settingsFilePath.c_str());
