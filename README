@@ -21,7 +21,7 @@ freiburg3/long_office_household - Loop closure
 freiburg2/desk_with_person - Dynamic objects
 freiburg3/walking_xyz - Fast motion
 freiburg1/desk - Baseline (simple, good tracking)
-freiburg3/walking_xyz - Fast motion
+EuRoC MH_01_easy
 
 ORB-SLAM3 modes:
 mono_node_cpp             RGB                  Single camera, no scale
