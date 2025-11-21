@@ -36,3 +36,8 @@ rgbd_node_cpp             RGB + Depth          Indoor with depth sensor(TUM data
 mono_inertial_node_cpp    RGB + IMU            Single camera with IMU()
 stereo_inertial_node_cpp  2×RGB + IMU          Stereo camera with IMU(EuRoC MH_01_easy)
 
+Check whether the node publish and subscribe successfully:
+ros2 topic info /cam0/image_raw
+
+
+
