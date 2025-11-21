@@ -1,6 +1,7 @@
 How to run the algorithms:
 step1  Start the ORB-SLAM3 algorithm
 source /opt/ros/jazzy/setup.bash
+source install/setup.bash
 ros2 run ros2_orb_slam3 rgbd_node_cpp
 
 step2 Feed data to the algorithm
