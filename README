@@ -25,8 +25,7 @@ freiburg3/walking_xyz - Fast motion
 
 ORB-SLAM3 modes:
 mono_node_cpp             RGB                  Single camera, no scale
-rgbd_node_cpp             RGB + Depth          Indoor with depth sensor
-rgbd_inertial_node_cpp    RGB + Depth + IMU    Indoor with IMU support
-mono_inertial_node_cpp    RGB + IMU            Single camera with IMU
-stereo_inertial_node_cpp  2×RGB + IMU          Stereo camera with IMU
+rgbd_node_cpp             RGB + Depth          Indoor with depth sensor(TUM dataset, all of freiburg dataset)
+mono_inertial_node_cpp    RGB + IMU            Single camera with IMU()
+stereo_inertial_node_cpp  2×RGB + IMU          Stereo camera with IMU()
 
