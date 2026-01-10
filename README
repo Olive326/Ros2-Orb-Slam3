@@ -1,51 +1,102 @@
-How to run the algorithms:
-step1  Start the ORB-SLAM3 algorithm
+# ORB-SLAM4 ROS2 Intergration & Performance Evaluation
+
+## Overview
+This project integrates the ORB-SLAM3 visual SLAM algorithm wit ROS2 to evaluate it across multiple robotic datasets. The goal was to understand SLAM behavior in different conditions.(loop closure, dynamic objects, fast motion) 
+
+## Project Highlights
+- **Multi-mode SLAM Testing**: Evaluated monocular, RGB-D, and stereo-inertial configurations
+- **Dataset Benchmarking**: Tested on TUM RGB-D (4 scenarios) and EuRoC MAV datasets
+- **Real-time Visualization**: Used Pangolin for trajectory visualization and performance monitoring
+- **Custom ROS2 Integration**: Created nodes and launch configurations for automated testing
+
+## System Architecture
+
+### SLAM Modes Tested
+| Mode | Sensors | Use Case | Dataset |
+|------|---------|----------|---------|
+| `rgbd_node_cpp` | RGB + Depth | Indoor with depth sensor | TUM RGB-D (all freiburg sequences) |
+| `mono_inertial_node_cpp` | RGB + IMU | Single camera with motion compensation | - |
+| `stereo_inertial_node_cpp` | 2×RGB + IMU | Outdoor/stereo with IMU | EuRoC MH_01_easy |
+| `mono_node_cpp` | RGB only | Simple monocular (no scale) | - |
+
+### Test Scenarios
+| Dataset | Challenge | Purpose |
+|---------|-----------|---------|
+| `freiburg1/desk` | Baseline | Simple environment, good tracking reference |
+| `freiburg2/desk_with_person` | Dynamic objects | Test robustness with moving obstacles |
+| `freiburg3/walking_xyz` | Fast motion | Evaluate under rapid camera movement |
+| `freiburg3/long_office_household` | Loop closure | Test long-term mapping and relocalization |
+| `euroc_mh01` | Stereo + IMU | Sensor fusion performance |
+
+## Quick Start
+
+### Running the System
+
+**Step 1: Launch ORB-SLAM3 Node**
+```bash
 source ~/Final-project/install/setup.bash
+
+# For RGB-D mode (TUM datasets)
 ros2 run ros2_orb_slam3 rgbd_node_cpp
 
-step2 Feed data to the algorithm
-ros2 bag play ~/Downloads/freiburg1_ros2/
+# For Stereo-Inertial mode (EuRoC)
+ros2 run ros2_orb_slam3 stereo_inertial_node_cpp
+```
 
-step3 Monitor (optional)
+**Step 2: Play Dataset**
+```bash
+# Example: TUM freiburg1
+ros2 bag play ~/Downloads/freiburg1_ros2/
+```
+
+**Step 3: Monitor Performance (Optional)**
+```bash
+# Check frame rate
 ros2 topic hz /camera/rgb/image_color
 
-when Run the last two nodes use the following command as the node name can't match:
+# Check node connections
+ros2 node info /rgbd_node_cpp
+```
+
+### Topic Remapping (for EuRoC datasets)
+Some datasets require topic remapping to match ORB-SLAM3's expected topic names:
+```bash
 ros2 run ros2_orb_slam3 mono_inertial_node_cpp \
   --ros-args \
   -r /camera/image_raw:=/cam0/image_raw \
   -r /imu:=/imu0
+```
 
+## Data Requirements
 
+For successful SLAM operation, ensure you have:
+- ✅ **ROS2 bag** with synchronized camera/IMU topics
+- ✅ **Camera calibration** YAML file (intrinsics, distortion)
+- ✅ **ORB vocabulary** file (ORBvoc.txt)
 
-data format we need(after preprocessing):
-✅ ROS2 bag with synchronized topics
-✅ Camera calibration YAML file
-✅ ORB vocabulary file 
-
-
-dataset we use:
-freiburg3/long_office_household - Loop closure
-freiburg2/desk_with_person - Dynamic objects
-freiburg3/walking_xyz - Fast motion
-freiburg1/desk - Baseline (simple, good tracking)
-euroc_mh01_ros2
-
-ORB-SLAM3 modes:
-mono_node_cpp             RGB                  Single camera, no scale
-rgbd_node_cpp             RGB + Depth          Indoor with depth sensor(TUM dataset, all of freiburg dataset)
-mono_inertial_node_cpp    RGB + IMU            Single camera with IMU()
-stereo_inertial_node_cpp  2×RGB + IMU          Stereo camera with IMU(EuRoC MH_01_easy)
-
-Chcek the node info:
-ros2 node info /mono_inertial_node_cpp
-
-Check whether the node publish and subscribe successfully:
+### Verify Topic Connections
+```bash
+# Check if topics are publishing/subscribing correctly
 ros2 topic info /cam0/image_raw
+```
 
-example success output:
+Expected output:
+```
 Type: sensor_msgs/msg/Image
 Publisher count: 1
 Subscription count: 1
+```
+
+## Key Observations
+
+### Performance Insights
+- **RGB-D mode** provided most robust tracking on TUM datasets due to depth information
+- **Loop closure** detection worked well on `freiburg3/long_office_household`
+- **Dynamic objects** (`freiburg2/desk_with_person`) challenged the algorithm but tracking remained stable
+- **Fast motion** scenarios showed occasional tracking losses requiring relocalization
+
+
+
 
 
 
