@@ -68,7 +68,18 @@ class MonocularMode : public rclcpp::Node
     ~MonocularMode(); // Destructor
         
     private:
-        
+        private:
+    // Add these new member variables:
+        std::string trajectoryFilePath;
+        std::ofstream trajectoryFile;
+        int saveInterval;
+    
+        int frameCount;
+        int trackedFrames;
+        int lostFrames;
+    
+        rclcpp::TimerBase::SharedPtr stats_timer_;
+
         // Class internal variables
         std::string homeDir = "";
         std::string packagePath = "ros2_test/src/ros2_orb_slam3/"; //! Change to match path to your workspace
@@ -77,7 +88,8 @@ class MonocularMode : public rclcpp::Node
         std::string vocFilePath = ""; // Path to ORB vocabulary provided by DBoW2 package
         std::string settingsFilePath = ""; // Path to settings file provided by ORB_SLAM3 package
         bool bSettingsFromPython = false; // Flag set once when experiment setting from python node is received
-        
+        bool saveTrajectory;
+
         std::string subexperimentconfigName = ""; // Subscription topic name
         std::string pubconfigackName = ""; // Publisher topic name
         std::string subImgMsgName = ""; // Topic to subscribe to receive RGB images from a python node
@@ -99,7 +111,9 @@ class MonocularMode : public rclcpp::Node
         void experimentSetting_callback(const std_msgs::msg::String& msg); // Callback to process settings sent over by Python node
         void Timestep_callback(const std_msgs::msg::Float64& time_msg); // Callback to process the timestep for this image
         void Img_callback(const sensor_msgs::msg::Image& msg); // Callback to process RGB image and semantic matrix sent by Python node
-        
+        void save_pose_to_file(const Sophus::SE3f& Tcw, double timestamp);
+        void print_statistics();
+        void print_final_statistics();
         //* Helper functions
         // ORB_SLAM3::eigenMatXf convertToEigenMat(const std_msgs::msg::Float32MultiArray& msg); // Helper method, converts semantic matrix eigenMatXf, a Eigen 4x4 float matrix
         void initializeVSLAM(std::string& configString); //* Method to bind an initialized VSLAM framework to this node
@@ -119,6 +133,21 @@ class RGBDMode : public rclcpp::Node
         ~RGBDMode();
         
     private:
+        // ADD THESE:
+        std::string trajectoryFilePath;
+        std::ofstream trajectoryFile;
+        bool saveTrajectory;
+        int saveInterval;
+    
+        int frameCount;
+        int trackedFrames;
+        int lostFrames;
+    
+        rclcpp::TimerBase::SharedPtr stats_timer_;
+    
+        void save_pose_to_file(const Sophus::SE3f& Tcw, double timestamp);
+        void print_statistics();
+        void print_final_statistics();
         std::string homeDir = "";
         std::string packagePath = "Final-project/src/ros2_orb_slam3/";
         std::string nodeName = "";
